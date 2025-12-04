@@ -1,0 +1,12 @@
+{
+  "name": "movement",
+  "version": "1.0.0",
+  "author": "StarchenkoDmitry (starchenkodmitrypavlovich@gmail.com)",
+  "license": "MIT",
+  "type": "module",
+  "scripts": {
+    "d:up": "docker compose up -d",
+    "d:stop": "docker compose stop",
+    "d:down": "docker compose down"
+  }
+}
