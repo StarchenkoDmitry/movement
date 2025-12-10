@@ -3,6 +3,7 @@ import 'reflect-metadata';
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe, VersioningType } from '@nestjs/common';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
@@ -11,6 +12,7 @@ async function bootstrap() {
       origin: true,
     },
   });
+  app.use(cookieParser());
   app.setGlobalPrefix('api');
   app.enableVersioning({
     type: VersioningType.URI,
