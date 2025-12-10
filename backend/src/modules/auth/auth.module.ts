@@ -6,6 +6,7 @@ import { AuthService } from './auth.service';
 import { AuthCredential } from 'src/entities/auth/auth-credential.entity';
 import { User } from 'src/entities/user.entity';
 import { Session } from 'src/entities/auth/session.entity';
+import { SessionService } from './session.service';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { Session } from 'src/entities/auth/session.entity';
     UserModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [AuthService, SessionService],
+  exports: [AuthService, SessionService],
 })
 export class AuthModule {}
