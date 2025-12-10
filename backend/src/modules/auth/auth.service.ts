@@ -57,7 +57,7 @@ export class AuthService {
     const expiresAt = new Date(Date.now() + SESSION_EXPAIRES_IN);
     const session = this.sessionRepository.create({
       userId,
-      sessionToken: generateRandomSessionToken(),
+      sessionId: generateRandomSessionToken(),
       expiresAt,
     });
     return session;
@@ -89,7 +89,7 @@ export class AuthService {
     return {
       success: true,
       userId: oauthResult.userId,
-      sessionToken: sessionToken.sessionToken,
+      sessionToken: sessionToken.sessionId,
       sessionTokenExpiresAt: sessionToken.expiresAt,
       isNewUser: oauthResult.isNewUser,
     };

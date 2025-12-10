@@ -23,7 +23,7 @@ export class Session {
 
   @Index({ unique: true })
   @PrimaryColumn('char', { length: SESSION_ID_LENGTH })
-  sessionToken: string;
+  sessionId: string;
 
   @Column()
   expiresAt: Date;
