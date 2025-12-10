@@ -2,12 +2,11 @@ import {
   Controller,
   Post,
   Param,
-  Req,
   Res,
   Query,
   BadRequestException,
 } from '@nestjs/common';
-import type { Request, Response } from 'express';
+import type { Response } from 'express';
 import { AuthService } from './auth.service';
 import { isOAuthProvider } from './constants/provider.enum';
 import { SESSION_COOKIE_NAME } from './constants/session.constant';
@@ -18,7 +17,6 @@ export class AuthController {
 
   @Post('/oauth/callback/:provider')
   public async callback(
-    @Req() req: Request,
     @Res({ passthrough: true }) res: Response,
     @Query('code') code: string,
     @Param('provider') provider: string,
@@ -36,6 +34,8 @@ export class AuthController {
       throw new BadRequestException(result.error);
     }
 
-    res.cookie(SESSION_COOKIE_NAME, result.sessionToken);
+    res.cookie(SESSION_COOKIE_NAME, result.sessionToken, {
+      expires: result.sessionTokenExpiresAt,
+    });
   }
 }

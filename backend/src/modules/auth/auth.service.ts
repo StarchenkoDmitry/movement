@@ -33,6 +33,7 @@ import {
   OAuthProviderErrors,
   ProcessOAuthErrors,
 } from './types/oauth.enum';
+import { SESSION_EXPAIRES_IN } from './constants/session.constant';
 
 @Injectable()
 export class AuthService {
@@ -53,9 +54,11 @@ export class AuthService {
   };
 
   async createSession(userId: UserId): Promise<Session> {
+    const expiresAt = new Date(Date.now() + SESSION_EXPAIRES_IN);
     const session = this.sessionRepository.create({
       userId,
       sessionToken: generateRandomSessionToken(),
+      expiresAt,
     });
     return session;
   }
@@ -87,6 +90,7 @@ export class AuthService {
       success: true,
       userId: oauthResult.userId,
       sessionToken: sessionToken.sessionToken,
+      sessionTokenExpiresAt: sessionToken.expiresAt,
       isNewUser: oauthResult.isNewUser,
     };
   }

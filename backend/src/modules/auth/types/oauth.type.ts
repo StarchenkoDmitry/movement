@@ -52,6 +52,7 @@ export type ProcessOAuthAndCreateSessionTokenResult =
       success: true;
       userId: UserId;
       sessionToken: string;
+      sessionTokenExpiresAt: Date;
       isNewUser: boolean;
     }
   | {
