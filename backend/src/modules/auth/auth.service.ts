@@ -60,6 +60,7 @@ export class AuthService {
       sessionId: generateRandomSessionToken(),
       expiresAt,
     });
+    await this.sessionRepository.save(session);
     return session;
   }
 

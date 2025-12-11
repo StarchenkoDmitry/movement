@@ -10,11 +10,13 @@ import type { Response } from 'express';
 import { AuthService } from './auth.service';
 import { isOAuthProvider } from './constants/provider.enum';
 import { SESSION_COOKIE_NAME } from './constants/session.constant';
+import { Public } from 'src/core/auth/public.decorator';
 
 @Controller('auth')
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
+  @Public()
   @Post('/oauth/callback/:provider')
   public async callback(
     @Res({ passthrough: true }) res: Response,
