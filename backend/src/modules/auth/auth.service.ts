@@ -31,6 +31,9 @@ import {
   ProcessOAuthErrors,
 } from './types/oauth.enum';
 import { SessionService } from './session.service';
+import { RegisterEmailDto } from './dto/register-email.dto';
+import { hashPassword } from './utils/password.utils';
+import { User } from 'src/entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -48,6 +51,59 @@ export class AuthService {
   > = {
     [OAuthProviders.GITHUB]: this.handleOAuthGitHub.bind(this),
   };
+
+  async registerWithEmail(registerEmailDto: RegisterEmailDto): Promise<
+    | {
+        success: true;
+        user: User;
+        authCredential: AuthCredential;
+      }
+    | { success: false; error: 'email-already-registered' | 'unknown-error' }
+  > {
+    const authProvider = await this.authCredentialRepository.findOneBy({
+      type: AuthType.EMAIL,
+      email: registerEmailDto.email,
+    });
+
+    if (authProvider)
+      return {
+        success: false,
+        error: 'email-already-registered',
+      };
+
+    const result = await this.authCredentialRepository.manager
+      .transaction(async (tx) => {
+        const user = await this.userService.create(
+          {
+            firstName: registerEmailDto.firstName ?? '',
+          },
+          tx,
+        );
+        const authCredential = this.authCredentialRepository.create({
+          type: AuthType.EMAIL,
+          email: registerEmailDto.email,
+          passwordHash: await hashPassword(registerEmailDto.password),
+          userId: user.id,
+        });
+        await this.authCredentialRepository.save(authCredential);
+
+        return {
+          success: true,
+          user,
+          authCredential,
+        } as const;
+      })
+      .catch((error) => {
+        this.logger.error(error);
+        return {
+          success: false,
+          error: 'unknown-error',
+        } as const;
+      });
+    return result;
+  }
+
+  async loginWithEmail(email: string, password: string) {}
 
   async processOAuthAndCreateSessionToken(
     params: OAuthHandleArguments,
