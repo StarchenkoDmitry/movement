@@ -3,15 +3,12 @@ import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityManager, Repository } from 'typeorm';
 import { UserService } from '../user/user.service';
-import { generateRandomSessionToken } from './utils/session.utils';
 import { OAuthProvider, OAuthProviders } from './constants/provider.enum';
 import {
   AuthCredential,
   AuthType,
   ProviderId,
 } from 'src/entities/auth/auth-credential.entity';
-import { UserId } from 'src/entities/user.entity';
-import { Session } from 'src/entities/auth/session.entity';
 import {
   OAuthHandleArguments,
   OAuthHandleProviderArguments,
@@ -33,7 +30,7 @@ import {
   OAuthProviderErrors,
   ProcessOAuthErrors,
 } from './types/oauth.enum';
-import { SESSION_EXPAIRES_IN } from './constants/session.constant';
+import { SessionService } from './session.service';
 
 @Injectable()
 export class AuthService {
@@ -42,9 +39,8 @@ export class AuthService {
   constructor(
     @InjectRepository(AuthCredential)
     private readonly authCredentialRepository: Repository<AuthCredential>,
-    @InjectRepository(Session)
-    private readonly sessionRepository: Repository<Session>,
     private readonly userService: UserService,
+    private readonly sessionService: SessionService,
   ) {}
 
   handleOAuthProviderList: Readonly<
@@ -52,17 +48,6 @@ export class AuthService {
   > = {
     [OAuthProviders.GITHUB]: this.handleOAuthGitHub.bind(this),
   };
-
-  async createSession(userId: UserId): Promise<Session> {
-    const expiresAt = new Date(Date.now() + SESSION_EXPAIRES_IN);
-    const session = this.sessionRepository.create({
-      userId,
-      sessionId: generateRandomSessionToken(),
-      expiresAt,
-    });
-    await this.sessionRepository.save(session);
-    return session;
-  }
 
   async processOAuthAndCreateSessionToken(
     params: OAuthHandleArguments,
@@ -75,11 +60,11 @@ export class AuthService {
         error: oauthResult.error,
       };
 
-    const sessionToken = await this.createSession(oauthResult.userId).catch(
-      (error) => {
+    const sessionToken = await this.sessionService
+      .create(oauthResult.userId)
+      .catch((error) => {
         this.logger.error(error);
-      },
-    );
+      });
 
     if (!sessionToken)
       return {
