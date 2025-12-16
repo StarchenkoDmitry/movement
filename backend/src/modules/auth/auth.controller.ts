@@ -7,6 +7,7 @@ import {
   BadRequestException,
   Body,
   HttpCode,
+  Logger,
 } from '@nestjs/common';
 import type { Response } from 'express';
 import { AuthService } from './auth.service';
@@ -18,6 +19,8 @@ import { SessionService } from './session.service';
 
 @Controller('auth')
 export class AuthController {
+  logger = new Logger(AuthController.name);
+
   constructor(
     private readonly authService: AuthService,
     private readonly sessionService: SessionService,
@@ -60,6 +63,7 @@ export class AuthController {
       await this.authService.registerWithEmail(registerEmailDto);
 
     if (!userResult.success) {
+      this.logger.log(userResult.error);
       throw new BadRequestException('Failed to register user');
     }
 

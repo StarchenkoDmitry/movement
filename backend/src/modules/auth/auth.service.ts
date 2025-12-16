@@ -79,13 +79,13 @@ export class AuthService {
           },
           tx,
         );
-        const authCredential = this.authCredentialRepository.create({
+        const authCredential = tx.create(AuthCredential, {
           type: AuthType.EMAIL,
           email: registerEmailDto.email,
           passwordHash: await hashPassword(registerEmailDto.password),
           userId: user.id,
         });
-        await this.authCredentialRepository.save(authCredential);
+        await tx.save(authCredential);
 
         return {
           success: true,

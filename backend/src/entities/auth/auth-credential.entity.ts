@@ -16,7 +16,7 @@ export enum AuthType {
   OAUTH = 'oauth',
 }
 
-export type AuthCredentialId = number; 
+export type AuthCredentialId = string;
 export type ProviderId = string; 
 
 // AuthCredential = Authentication Credential
