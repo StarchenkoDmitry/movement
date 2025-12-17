@@ -1,16 +1,22 @@
-import { z } from "zod";
-import { useForm, type SubmitHandler } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { OAuthProvidersList } from "@shared/ui/oauth-buttons";
 import Button from "@mui/material/Button";
+import Divider from "@mui/material/Divider";
 import TextField from "@mui/material/TextField";
+import Typography from "@mui/material/Typography";
+import { OAuthProvidersList } from "@shared/ui/oauth-buttons";
+import { useMemo, useState } from "react";
+import { useForm, type SubmitHandler } from "react-hook-form";
+import { z } from "zod";
+
+import { AnimatePresence, motion } from "motion/react";
+import { RegisterWithEmail } from "./api/register.service";
 
 const registrationWithEmailBaseSchema = z.object({
-  email: z.string().min(1, "Email обязателен").email("Некорректный email"),
+  email: z.string().min(2, "Email обязателен").email("Некорректный email"),
 
   password: z
     .string()
-    .min(8, "Пароль должен содержать минимум 8 символов")
+    .min(8, "Пароль должен содержать минимум 8 символов, буквы и цифры")
     .regex(/[a-zA-Z]/, "Пароль должен содержать буквы")
     .regex(/\d/, "Пароль должен содержать цифры"),
 
@@ -37,30 +43,33 @@ export function RegisterWithEmailForm() {
   const {
     register,
     handleSubmit,
-    watch,
-    formState: { errors },
+    formState: { errors, isSubmitting, isValid },
   } = useForm({
     resolver: zodResolver(registrationWithEmailSchema),
+    mode: "all",
+    reValidateMode: "onChange",
   });
-  const onSubmit: SubmitHandler<RegistrationWithEmailSubmitData> = (data) => {
-    console.log(data);
-  };
-  return (
-    <div className="m-4 p-4 max-w-80 rounded-2xl bg-white dark:bg-amber-500">
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <h2 className="text-2xl text-center">Sign In</h2>
-        {/* <div className="ml-4">
-            <span>Welcome user, please sign in to continue</span>
-          </div> */}
 
-        {/* <TextField
-            className="my-4 block"
-            label="Your First Name"
-            fullWidth
-            size="small"
-            variant="outlined"
-            {...register("firstName")}
-          /> */}
+  const [isRegistered, setIsRegistered] = useState(false);
+
+  const isSubmitEnabled = useMemo(() => {
+    return !isSubmitting && !isRegistered;
+  }, [isSubmitting, isRegistered]);
+
+  const onRegisterWithEmailSubmit: SubmitHandler<
+    RegistrationWithEmailSubmitData
+  > = async (data) => {
+    const result = await RegisterWithEmail(data);
+    if (result.registrationSucceeded) {
+      setIsRegistered(true);
+    }
+  };
+
+
+  return (
+    <div className="m-4 p-4 max-w-80 w-full rounded-2xl bg-white dark:bg-amber-500">
+      <form onSubmit={handleSubmit(onRegisterWithEmailSubmit)}>
+        <h2 className="text-2xl text-center">Sign In</h2>
 
         <TextField
           className="my-4 block"
@@ -69,7 +78,24 @@ export function RegisterWithEmailForm() {
           size="small"
           variant="outlined"
           required
-          {...register("email", { required: true })}
+          disabled={!isSubmitEnabled}
+          error={!!errors.email}
+          helperText={
+            <AnimatePresence>
+              {!!errors.email && (
+                <motion.span
+                  className="block overflow-hidden"
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.25 }}
+                >
+                  {errors.email?.message}
+                </motion.span>
+              )}
+            </AnimatePresence>
+          }
+          {...register("email")}
         />
 
         <TextField
@@ -79,6 +105,23 @@ export function RegisterWithEmailForm() {
           fullWidth
           variant="outlined"
           required
+          disabled={!isSubmitEnabled}
+          error={!!errors.password}
+          helperText={
+            <AnimatePresence>
+              {!!errors.password && (
+                <motion.span
+                  className="block overflow-hidden"
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.25 }}
+                >
+                  {errors.password?.message}
+                </motion.span>
+              )}
+            </AnimatePresence>
+          }
           {...register("password")}
         />
 
@@ -89,17 +132,44 @@ export function RegisterWithEmailForm() {
           fullWidth
           variant="outlined"
           required
+          disabled={!isSubmitEnabled}
+          error={!!errors.confirmPassword}
+          helperText={
+            <AnimatePresence>
+              {!!errors.confirmPassword && (
+                <motion.span
+                  className="block overflow-hidden"
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.25 }}
+                >
+                  {errors.confirmPassword?.message}
+                </motion.span>
+              )}
+            </AnimatePresence>
+          }
           {...register("confirmPassword")}
         />
 
-        <Button variant="contained" type="submit">
-          Sing In With Email And Password
+        <Button
+          variant="contained"
+          type="submit"
+          fullWidth
+          disabled={!isSubmitEnabled}
+        >
+          {/* Sing In With Email And Password */}
+          {isRegistered
+            ? "Регистрация завершена"
+            : isSubmitting
+            ? "Регистрация..."
+            : "Зарегистрироваться"}
         </Button>
       </form>
 
-      <div className="">
-        <span className="text-divider">Or</span>
-      </div>
+      <Divider sx={{ my: 1 }}>
+        <Typography>Or</Typography>
+      </Divider>
 
       <div>
         <OAuthProvidersList />
