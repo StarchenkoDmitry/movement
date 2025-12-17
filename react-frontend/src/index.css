@@ -1,12 +1,6 @@
 @import "tailwindcss";
 
-
 @custom-variant dark (&:where([data-theme=dark], [data-theme=dark] *));
-
-
-body {
-  background-color: khaki;
-}
 
 .text-divider {
   display: flex;
@@ -18,5 +12,5 @@ body {
   content: "";
   flex-grow: 1;
   border-top: 0.0625rem solid #ccc;
-  margin: 0 .5rem;
+  margin: 0 0.5rem;
 }
