@@ -1,13 +1,16 @@
 import { Injectable, Logger, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { Strategy } from 'passport';
-import { Request } from 'express';
+import type { Request, Response } from 'express';
 
 import { SessionService } from '../session.service';
 import { UserService } from 'src/modules/user/user.service';
 
 import { extractSessionIdFromRequest } from '../utils/session.utils';
-import { SESSION_SYMBOL } from '../constants/session.constant';
+import {
+  SESSION_COOKIE_NAME,
+  SESSION_SYMBOL,
+} from '../constants/session.constant';
 
 @Injectable()
 export class SessionStrategy extends PassportStrategy(
@@ -57,6 +60,23 @@ export class SessionStrategy extends PassportStrategy(
         session,
         user,
       };
+
+      const needToRefreshSession =
+        await this.sessionService.refreshSession(session);
+      this.logger.debug('needToRefreshSession', needToRefreshSession);
+      if (needToRefreshSession.needToRefresh) {
+        const res = req.res;
+        if (!res) {
+          throw new Error('res not found in req object');
+        }
+
+        this.logger.debug('Refreshed session', needToRefreshSession.session);
+
+        res.cookie(SESSION_COOKIE_NAME, session.sessionId, {
+          expires: session.expiresAt,
+        });
+      }
+
       return this.success(user);
     } catch (err) {
       return this.error(err);
