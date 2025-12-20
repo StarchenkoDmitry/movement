@@ -8,7 +8,7 @@ export function MainHeader() {
       <nav className="inline-flex *:text-sky-500">
         <a href="/" className="">Home</a>
         <a href="/auth">Auth</a>
-        <a href="/auth">Me</a>
+        <a href="/me">Me</a>
       </nav>
       <span>Kek2</span>
       <h3>H3</h3>
