@@ -1,8 +1,9 @@
 import "./App.css";
 import { useState } from "react";
 import { BrowserRouter, Routes, Route } from "react-router";
-import { AuthPage } from "@pages/auth";
+import { AuthPage, OAuthCallbackPage } from "@pages/auth";
 import { HomePage } from "@pages/home";
+import { MePage } from "@pages/me";
 
 function App() {
   const [count, setCount] = useState(0);
@@ -11,7 +12,11 @@ function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomePage></HomePage>} />
+        
         <Route path="/auth" element={<AuthPage></AuthPage>} />
+        <Route path="/auth/oauth/:provider" element={<OAuthCallbackPage />} />
+
+        <Route path="/me" element={<MePage></MePage>} />
       </Routes>
     </BrowserRouter>
   );
