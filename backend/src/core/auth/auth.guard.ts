@@ -22,6 +22,12 @@ export class AuthSessionGuard extends AuthGuard('custom-session') {
       return true;
     }
 
+    const httpContext = context.switchToHttp();
+    const req = httpContext.getRequest();
+    const res = httpContext.getResponse();
+    // Прикрепляем res к req для доступа в стратегии
+    req.res = res;
+
     return super.canActivate(context);
   }
 }

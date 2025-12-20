@@ -7,7 +7,7 @@ import { SessionService } from '../session.service';
 import { UserService } from 'src/modules/user/user.service';
 
 import { extractSessionIdFromRequest } from '../utils/session.utils';
-import { SESSION_SYMBOL } from '../constants/session.constant';
+import { SESSION_SYMBOL, SESSION_UPDATE_EXPAIRES_IN } from '../constants/session.constant';
 
 @Injectable()
 export class SessionStrategy extends PassportStrategy(
@@ -24,10 +24,12 @@ export class SessionStrategy extends PassportStrategy(
   }
 
   async validate(payload: any): Promise<any> {
+    console.log("validate arguments", arguments)
     return payload;
   }
 
   async authenticate(req: Request, options?: any) {
+    console.log("arguments", arguments)
     try {
       const sessionId = extractSessionIdFromRequest(req);
 
@@ -46,11 +48,16 @@ export class SessionStrategy extends PassportStrategy(
       if (session.expiresAt.getTime() < Date.now()) {
         return this.error(new UnauthorizedException('Session expired'));
       }
-
+ 
       const user = await this.userService.findOne(session.userId);
 
       if (!user) {
         return this.error(new UnauthorizedException('User not found'));
+      }
+
+      const needToUpdateSessionExpireAtTime = session.expiresAt.getTime() + SESSION_UPDATE_EXPAIRES_IN;
+      if (needToUpdateSessionExpireAtTime){
+
       }
 
       req[SESSION_SYMBOL] = {
