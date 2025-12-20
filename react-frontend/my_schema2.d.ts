@@ -72,8 +72,14 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
-        UpdateUserDto: Record<string, never>;
-        RegisterEmailDto: Record<string, never>;
+        UpdateUserDto: {
+            firstName: string;
+        };
+        RegisterEmailDto: {
+            email: string;
+            password: string;
+            firstName?: string;
+        };
     };
     responses: never;
     parameters: never;
