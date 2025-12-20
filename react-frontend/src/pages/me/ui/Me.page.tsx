@@ -2,16 +2,25 @@ import { MainHeader } from "@shared/ui/headers";
 import { useEffect, useState } from "react";
 
 export function MePage() {
+  const [isLoading, setIsLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
     fetch("http://localhost:3000/api/v1/user/me", {
       credentials: "include",
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (res.ok) {
+          return res.json();
+        }
+        return null;
+      })
       .then((data) => {
         console.log("user", data);
         setUser(data);
+      })
+      .finally(() => {
+        setIsLoading(false);
       });
   }, []);
 
@@ -19,6 +28,7 @@ export function MePage() {
     <div>
       <MainHeader />
       <h1>Me Page</h1>
+      <div>isLoading: {isLoading ? "true" : "false"}</div>
       <div>
         {user ? (
           <>
