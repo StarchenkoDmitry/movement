@@ -24,4 +24,8 @@ export class UserService {
   async findOne(id: UserId): Promise<User | null> {
     return await this.userRepository.findOneBy({ id });
   }
+
+  async update(id: UserId, updateUserDto: Partial<CreateUserDto>) {
+    return await this.userRepository.update(id, updateUserDto);
+  }
 }
