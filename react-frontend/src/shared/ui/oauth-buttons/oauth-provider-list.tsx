@@ -28,9 +28,9 @@ export function OAuthProvidersList() {
           padding: "12px",
         }}
         onClick={() => {
-          window.location.assign(
-            "https://github.com/login/oauth/authorize2?scope=user:email&client_id=Ov23li8LexNQgXy0wWo5"
-          );
+          const url =
+            "https://github.com/login/oauth/authorize?scope=user:email&client_id=Ov23li8LexNQgXy0wWo5";
+          window.open(url);
         }}
       />
     </div>
