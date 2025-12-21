@@ -6,24 +6,15 @@ import {
   getUserControllerMeV1QueryKey,
   getUserControllerMeV1QueryOptions,
   userControllerMeV1,
-  userControllerUpdateV1,
   useUserControllerMeV1,
 } from "../../../orval/user";
+import { UpdateUserName } from "./update-user-name";
 
 export function MePage() {
-  // const [isLoading, setIsLoading] = useState(true);
-  // const [user, setUser] = useState<any>(null);
-
+  
   const { isLoading, data: user, isRefetching } = useUserControllerMeV1();
   // const user = data as any;
-  console.log("data", user);
-
-  const changeName = async () => {
-    const res = await userControllerUpdateV1({
-      firstName: `Random ${Math.floor(Math.random() * 100000)}`,
-    });
-    console.log("res", res);
-  };
+  console.log("[MePage] user.firstName:", user?.firstName);
 
   return (
     <div>
@@ -44,8 +35,7 @@ export function MePage() {
         )}
       </div>
       <div>
-        <h3>Mutation</h3>
-        <button onClick={changeName}>Update name</button>
+        <UpdateUserName></UpdateUserName>
       </div>
       <footer></footer>
     </div>
