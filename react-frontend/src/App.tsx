@@ -4,7 +4,7 @@ import { BrowserRouter, Routes, Route } from "react-router";
 import { AuthPage, OAuthCallbackPage } from "@pages/auth";
 import { HomePage } from "@pages/home";
 import { MePage } from "@pages/me";
-import { useApi } from "@shared/api/my-api";
+// import { useApi } from "@shared/api/my-api";
 import {
   QueryClient,
   QueryClientProvider,
@@ -13,7 +13,7 @@ import {
 
 const queryClient = new QueryClient();
 
-useApi();
+// useApi();
 function App() {
   const [count, setCount] = useState(0);
 
