@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "g:api": "npx openapi-typescript http://localhost:3000/api/api.yaml -o ./my_schema.d.ts",
-    "g:api2": "npx openapi-typescript http://localhost:3000/api/api.yaml -o ./my_schema2.d.ts"
+    "g:api2": "npx openapi-typescript http://localhost:3000/api/api.yaml -o ./my_schema2.d.ts",
+    "g:orval:api": "npx orval --input http://localhost:3000/api/api.yaml --output ./src/petstore.ts"
   },
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -19,6 +20,7 @@
     "@mui/icons-material": "^7.3.6",
     "@mui/material": "^7.3.6",
     "@tailwindcss/vite": "^4.1.18",
+    "axios": "^1.13.2",
     "motion": "^12.23.26",
     "openapi-fetch": "^0.15.0",
     "react": "^19.2.0",
