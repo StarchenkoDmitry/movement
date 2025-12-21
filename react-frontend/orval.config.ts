@@ -15,8 +15,10 @@ export default defineConfig({
     },
     output: {
       // mode: "single", // Все типы и функции в одном файле
-      target: "./src/orval/petstore2.ts",
+      mode: "tags",
+      target: "./src/orval/",
       // client: "axios", // Можно изменить на 'react-query', 'swr', 'fetch' и др.
+      client: "react-query", // Можно изменить на 'react-query', 'swr', 'fetch' и др.
       // mock: true, // Генерация MSW моков (по желанию)
     },
   },
