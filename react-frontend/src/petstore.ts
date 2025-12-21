@@ -11,12 +11,15 @@ import type {
   AxiosResponse
 } from 'axios';
 
+export interface User { [key: string]: unknown }
+
 export interface UpdateUserDto {
   firstName: string;
 }
 
 export interface RegisterEmailDto {
   email: string;
+  /** @minLength 4 */
   password: string;
   firstName?: string;
 }
@@ -33,7 +36,7 @@ export const appControllerGetHelloV1 = <TData = AxiosResponse<void>>(
     );
   }
 
-export const userControllerFindOneV1 = <TData = AxiosResponse<void>>(
+export const userControllerMeV1 = <TData = AxiosResponse<User | User[]>>(
      options?: AxiosRequestConfig
  ): Promise<TData> => {
     return axios.default.get(
@@ -71,7 +74,7 @@ export const authControllerRegisterWithEmailV1 = <TData = AxiosResponse<void>>(
   }
 
 export type AppControllerGetHelloV1Result = AxiosResponse<void>
-export type UserControllerFindOneV1Result = AxiosResponse<void>
+export type UserControllerMeV1Result = AxiosResponse<User | User[]>
 export type UserControllerUpdateV1Result = AxiosResponse<void>
 export type AuthControllerCallbackV1Result = AxiosResponse<void>
 export type AuthControllerRegisterWithEmailV1Result = AxiosResponse<void>

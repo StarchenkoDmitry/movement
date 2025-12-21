@@ -10,6 +10,7 @@ export class RegisterEmailDto {
 
   @ApiProperty({
     type: String,
+    minLength: 4
   })
   @IsString()
   @MinLength(4)
