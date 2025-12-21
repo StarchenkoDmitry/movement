@@ -10,8 +10,6 @@ export function MainHeader() {
         <a href="/auth">Auth</a>
         <a href="/me">Me</a>
       </nav>
-      <span>Kek2</span>
-      <h3>H3</h3>
     </header>
   );
 }

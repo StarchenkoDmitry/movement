@@ -13,12 +13,12 @@ import "@fontsource/roboto/500.css";
 import "@fontsource/roboto/700.css";
 
 createRoot(document.getElementById("root")!).render(
-  <StrictMode>
+  // <StrictMode>
     <StyledEngineProvider enableCssLayer>
       <GlobalStyles styles="@layer theme, base, mui, components, utilities;" />
 
       <CssBaseline />
       <App />
     </StyledEngineProvider>
-  </StrictMode>
+  // </StrictMode>
 );
