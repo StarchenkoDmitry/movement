@@ -15,7 +15,7 @@ export class UserController {
   @ApiResponse({ status: 200, description: 'User data.' })
   @UseGuards(AuthSessionGuard)
   @Get('me')
-  findOne(@GetUser() user: User) {
+  me(@GetUser() user: User) {
     return user;
   }
   
