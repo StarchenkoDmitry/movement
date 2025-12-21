@@ -13,7 +13,7 @@ export class UserController {
 
   @ApiSecurity(SESSION_COOKIE_NAME)
   @ApiResponse({ status: 200, description: 'User data.',type: User })
-  @ApiResponse({ status: 201, description: 'User data2.',type: User, isArray: true })
+  // @ApiResponse({ status: 201, description: 'User data2.',type: User, isArray: true })
   // @ApiResponse({ status: 200, description: 'User data.' })
   @ApiResponse({ status: 401, description: 'Unauthorized.', type: Number })
   @UseGuards(AuthSessionGuard)
