@@ -1,11 +1,5 @@
 import { MainHeader } from "@shared/ui/headers";
-import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
-import type { User } from "../../../orval/movement.schemas";
 import {
-  getUserControllerMeV1QueryKey,
-  getUserControllerMeV1QueryOptions,
-  userControllerMeV1,
   useUserControllerMeV1,
 } from "../../../orval/user";
 import { UpdateUserName } from "./update-user-name";
