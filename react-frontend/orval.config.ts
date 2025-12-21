@@ -20,6 +20,12 @@ export default defineConfig({
       // client: "axios", // Можно изменить на 'react-query', 'swr', 'fetch' и др.
       client: "react-query", // Можно изменить на 'react-query', 'swr', 'fetch' и др.
       // mock: true, // Генерация MSW моков (по желанию)
+      override: {
+        mutator: {
+          path: "./src/shared/custom-instance.ts",
+          name: "customInstance",
+        },
+      },
     },
   },
 });

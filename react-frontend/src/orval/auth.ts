@@ -10,52 +10,50 @@ import {
 } from '@tanstack/react-query';
 import type {
   MutationFunction,
+  QueryClient,
   UseMutationOptions,
   UseMutationResult
 } from '@tanstack/react-query';
-
-import * as axios from 'axios';
-import type {
-  AxiosError,
-  AxiosRequestConfig,
-  AxiosResponse
-} from 'axios';
 
 import type {
   AuthControllerCallbackV1Params,
   RegisterEmailDto
 } from './movement.schemas';
 
+import { customInstance } from '../shared/custom-instance';
 
 
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 
 
 export const authControllerCallbackV1 = (
     provider: string,
-    params: AuthControllerCallbackV1Params, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<void>> => {
-    
-    
-    return axios.default.post(
-      `/api/v1/auth/oauth/callback/${provider}`,undefined,{
-    ...options,
-        params: {...params, ...options?.params},}
-    );
-  }
+    params: AuthControllerCallbackV1Params,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<void>(
+      {url: `/api/v1/auth/oauth/callback/${provider}`, method: 'POST',
+        params, signal
+    },
+      options);
+    }
+  
 
 
-
-export const getAuthControllerCallbackV1MutationOptions = <TError = AxiosError<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof authControllerCallbackV1>>, TError,{provider: string;params: AuthControllerCallbackV1Params}, TContext>, axios?: AxiosRequestConfig}
+export const getAuthControllerCallbackV1MutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof authControllerCallbackV1>>, TError,{provider: string;params: AuthControllerCallbackV1Params}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationOptions<Awaited<ReturnType<typeof authControllerCallbackV1>>, TError,{provider: string;params: AuthControllerCallbackV1Params}, TContext> => {
 
 const mutationKey = ['authControllerCallbackV1'];
-const {mutation: mutationOptions, axios: axiosOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, axios: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
       
 
@@ -63,7 +61,7 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
       const mutationFn: MutationFunction<Awaited<ReturnType<typeof authControllerCallbackV1>>, {provider: string;params: AuthControllerCallbackV1Params}> = (props) => {
           const {provider,params} = props ?? {};
 
-          return  authControllerCallbackV1(provider,params,axiosOptions)
+          return  authControllerCallbackV1(provider,params,requestOptions)
         }
 
         
@@ -73,11 +71,11 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
 
     export type AuthControllerCallbackV1MutationResult = NonNullable<Awaited<ReturnType<typeof authControllerCallbackV1>>>
     
-    export type AuthControllerCallbackV1MutationError = AxiosError<unknown>
+    export type AuthControllerCallbackV1MutationError = unknown
 
-    export const useAuthControllerCallbackV1 = <TError = AxiosError<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof authControllerCallbackV1>>, TError,{provider: string;params: AuthControllerCallbackV1Params}, TContext>, axios?: AxiosRequestConfig}
- ): UseMutationResult<
+    export const useAuthControllerCallbackV1 = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof authControllerCallbackV1>>, TError,{provider: string;params: AuthControllerCallbackV1Params}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof authControllerCallbackV1>>,
         TError,
         {provider: string;params: AuthControllerCallbackV1Params},
@@ -86,31 +84,34 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
 
       const mutationOptions = getAuthControllerCallbackV1MutationOptions(options);
 
-      return useMutation(mutationOptions);
+      return useMutation(mutationOptions, queryClient);
     }
     export const authControllerRegisterWithEmailV1 = (
-    registerEmailDto: RegisterEmailDto, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<void>> => {
-    
-    
-    return axios.default.post(
-      `/api/v1/auth/register/email`,
-      registerEmailDto,options
-    );
-  }
+    registerEmailDto: RegisterEmailDto,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<void>(
+      {url: `/api/v1/auth/register/email`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: registerEmailDto, signal
+    },
+      options);
+    }
+  
 
 
-
-export const getAuthControllerRegisterWithEmailV1MutationOptions = <TError = AxiosError<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof authControllerRegisterWithEmailV1>>, TError,{data: RegisterEmailDto}, TContext>, axios?: AxiosRequestConfig}
+export const getAuthControllerRegisterWithEmailV1MutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof authControllerRegisterWithEmailV1>>, TError,{data: RegisterEmailDto}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationOptions<Awaited<ReturnType<typeof authControllerRegisterWithEmailV1>>, TError,{data: RegisterEmailDto}, TContext> => {
 
 const mutationKey = ['authControllerRegisterWithEmailV1'];
-const {mutation: mutationOptions, axios: axiosOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, axios: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
       
 
@@ -118,7 +119,7 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
       const mutationFn: MutationFunction<Awaited<ReturnType<typeof authControllerRegisterWithEmailV1>>, {data: RegisterEmailDto}> = (props) => {
           const {data} = props ?? {};
 
-          return  authControllerRegisterWithEmailV1(data,axiosOptions)
+          return  authControllerRegisterWithEmailV1(data,requestOptions)
         }
 
         
@@ -128,11 +129,11 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
 
     export type AuthControllerRegisterWithEmailV1MutationResult = NonNullable<Awaited<ReturnType<typeof authControllerRegisterWithEmailV1>>>
     export type AuthControllerRegisterWithEmailV1MutationBody = RegisterEmailDto
-    export type AuthControllerRegisterWithEmailV1MutationError = AxiosError<unknown>
+    export type AuthControllerRegisterWithEmailV1MutationError = unknown
 
-    export const useAuthControllerRegisterWithEmailV1 = <TError = AxiosError<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof authControllerRegisterWithEmailV1>>, TError,{data: RegisterEmailDto}, TContext>, axios?: AxiosRequestConfig}
- ): UseMutationResult<
+    export const useAuthControllerRegisterWithEmailV1 = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof authControllerRegisterWithEmailV1>>, TError,{data: RegisterEmailDto}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof authControllerRegisterWithEmailV1>>,
         TError,
         {data: RegisterEmailDto},
@@ -141,6 +142,6 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
 
       const mutationOptions = getAuthControllerRegisterWithEmailV1MutationOptions(options);
 
-      return useMutation(mutationOptions);
+      return useMutation(mutationOptions, queryClient);
     }
     

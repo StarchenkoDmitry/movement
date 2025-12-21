@@ -10,42 +10,45 @@ import {
   useQuery
 } from '@tanstack/react-query';
 import type {
+  DataTag,
+  DefinedInitialDataOptions,
+  DefinedUseQueryResult,
   MutationFunction,
+  QueryClient,
   QueryFunction,
   QueryKey,
+  UndefinedInitialDataOptions,
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
   UseQueryResult
 } from '@tanstack/react-query';
 
-import * as axios from 'axios';
-import type {
-  AxiosError,
-  AxiosRequestConfig,
-  AxiosResponse
-} from 'axios';
-
 import type {
   UpdateUserDto,
   User
 } from './movement.schemas';
 
+import { customInstance } from '../shared/custom-instance';
 
 
+
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 
 
 export const userControllerMeV1 = (
-     options?: AxiosRequestConfig
- ): Promise<AxiosResponse<User | User[]>> => {
     
-    
-    return axios.default.get(
-      `/api/v1/user/me`,options
-    );
-  }
-
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<User>(
+      {url: `/api/v1/user/me`, method: 'GET', signal
+    },
+      options);
+    }
+  
 
 
 
@@ -56,37 +59,61 @@ export const getUserControllerMeV1QueryKey = () => {
     }
 
     
-export const getUserControllerMeV1QueryOptions = <TData = Awaited<ReturnType<typeof userControllerMeV1>>, TError = AxiosError<number>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof userControllerMeV1>>, TError, TData>, axios?: AxiosRequestConfig}
+export const getUserControllerMeV1QueryOptions = <TData = Awaited<ReturnType<typeof userControllerMeV1>>, TError = number>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof userControllerMeV1>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, axios: axiosOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getUserControllerMeV1QueryKey();
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof userControllerMeV1>>> = ({ signal }) => userControllerMeV1({ signal, ...axiosOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof userControllerMeV1>>> = ({ signal }) => userControllerMeV1(requestOptions, signal);
 
       
 
       
 
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof userControllerMeV1>>, TError, TData> & { queryKey: QueryKey }
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof userControllerMeV1>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
 export type UserControllerMeV1QueryResult = NonNullable<Awaited<ReturnType<typeof userControllerMeV1>>>
-export type UserControllerMeV1QueryError = AxiosError<number>
+export type UserControllerMeV1QueryError = number
 
 
+export function useUserControllerMeV1<TData = Awaited<ReturnType<typeof userControllerMeV1>>, TError = number>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof userControllerMeV1>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof userControllerMeV1>>,
+          TError,
+          Awaited<ReturnType<typeof userControllerMeV1>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useUserControllerMeV1<TData = Awaited<ReturnType<typeof userControllerMeV1>>, TError = number>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof userControllerMeV1>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof userControllerMeV1>>,
+          TError,
+          Awaited<ReturnType<typeof userControllerMeV1>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useUserControllerMeV1<TData = Awaited<ReturnType<typeof userControllerMeV1>>, TError = number>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof userControllerMeV1>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useUserControllerMeV1<TData = Awaited<ReturnType<typeof userControllerMeV1>>, TError = AxiosError<number>>(
-  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof userControllerMeV1>>, TError, TData>, axios?: AxiosRequestConfig}
-  
- ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+export function useUserControllerMeV1<TData = Awaited<ReturnType<typeof userControllerMeV1>>, TError = number>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof userControllerMeV1>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
   const queryOptions = getUserControllerMeV1QueryOptions(options)
 
-  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   query.queryKey = queryOptions.queryKey ;
 
@@ -96,28 +123,31 @@ export function useUserControllerMeV1<TData = Awaited<ReturnType<typeof userCont
 
 
 export const userControllerUpdateV1 = (
-    updateUserDto: UpdateUserDto, options?: AxiosRequestConfig
- ): Promise<AxiosResponse<void>> => {
-    
-    
-    return axios.default.post(
-      `/api/v1/user/me`,
-      updateUserDto,options
-    );
-  }
+    updateUserDto: UpdateUserDto,
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<void>(
+      {url: `/api/v1/user/me`, method: 'POST',
+      headers: {'Content-Type': 'application/json', },
+      data: updateUserDto, signal
+    },
+      options);
+    }
+  
 
 
-
-export const getUserControllerUpdateV1MutationOptions = <TError = AxiosError<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof userControllerUpdateV1>>, TError,{data: UpdateUserDto}, TContext>, axios?: AxiosRequestConfig}
+export const getUserControllerUpdateV1MutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof userControllerUpdateV1>>, TError,{data: UpdateUserDto}, TContext>, request?: SecondParameter<typeof customInstance>}
 ): UseMutationOptions<Awaited<ReturnType<typeof userControllerUpdateV1>>, TError,{data: UpdateUserDto}, TContext> => {
 
 const mutationKey = ['userControllerUpdateV1'];
-const {mutation: mutationOptions, axios: axiosOptions} = options ?
+const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
       : {...options, mutation: {...options.mutation, mutationKey}}
-      : {mutation: { mutationKey, }, axios: undefined};
+      : {mutation: { mutationKey, }, request: undefined};
 
       
 
@@ -125,7 +155,7 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
       const mutationFn: MutationFunction<Awaited<ReturnType<typeof userControllerUpdateV1>>, {data: UpdateUserDto}> = (props) => {
           const {data} = props ?? {};
 
-          return  userControllerUpdateV1(data,axiosOptions)
+          return  userControllerUpdateV1(data,requestOptions)
         }
 
         
@@ -135,11 +165,11 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
 
     export type UserControllerUpdateV1MutationResult = NonNullable<Awaited<ReturnType<typeof userControllerUpdateV1>>>
     export type UserControllerUpdateV1MutationBody = UpdateUserDto
-    export type UserControllerUpdateV1MutationError = AxiosError<unknown>
+    export type UserControllerUpdateV1MutationError = unknown
 
-    export const useUserControllerUpdateV1 = <TError = AxiosError<unknown>,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof userControllerUpdateV1>>, TError,{data: UpdateUserDto}, TContext>, axios?: AxiosRequestConfig}
- ): UseMutationResult<
+    export const useUserControllerUpdateV1 = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof userControllerUpdateV1>>, TError,{data: UpdateUserDto}, TContext>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof userControllerUpdateV1>>,
         TError,
         {data: UpdateUserDto},
@@ -148,6 +178,6 @@ const {mutation: mutationOptions, axios: axiosOptions} = options ?
 
       const mutationOptions = getUserControllerUpdateV1MutationOptions(options);
 
-      return useMutation(mutationOptions);
+      return useMutation(mutationOptions, queryClient);
     }
     

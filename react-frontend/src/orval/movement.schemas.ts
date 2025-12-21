@@ -5,7 +5,19 @@
  * The cats API description
  * OpenAPI spec version: 1.0
  */
-export interface User { [key: string]: unknown }
+export interface AuthCredential { [key: string]: unknown }
+
+export interface Session { [key: string]: unknown }
+
+export interface User {
+  id: string;
+  /** @nullable */
+  firstName: string | null;
+  createdAt: string;
+  updatedAt: string;
+  credential: AuthCredential;
+  sessions: Session[];
+}
 
 export interface UpdateUserDto {
   firstName: string;

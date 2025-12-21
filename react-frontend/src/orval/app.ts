@@ -9,34 +9,37 @@ import {
   useQuery
 } from '@tanstack/react-query';
 import type {
+  DataTag,
+  DefinedInitialDataOptions,
+  DefinedUseQueryResult,
+  QueryClient,
   QueryFunction,
   QueryKey,
+  UndefinedInitialDataOptions,
   UseQueryOptions,
   UseQueryResult
 } from '@tanstack/react-query';
 
-import * as axios from 'axios';
-import type {
-  AxiosError,
-  AxiosRequestConfig,
-  AxiosResponse
-} from 'axios';
+import { customInstance } from '../shared/custom-instance';
 
 
 
+type SecondParameter<T extends (...args: never) => unknown> = Parameters<T>[1];
 
 
 
 export const appControllerGetHelloV1 = (
-     options?: AxiosRequestConfig
- ): Promise<AxiosResponse<void>> => {
     
-    
-    return axios.default.get(
-      `/api/v1/app/hi`,options
-    );
-  }
-
+ options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
+) => {
+      
+      
+      return customInstance<void>(
+      {url: `/api/v1/app/hi`, method: 'GET', signal
+    },
+      options);
+    }
+  
 
 
 
@@ -47,37 +50,61 @@ export const getAppControllerGetHelloV1QueryKey = () => {
     }
 
     
-export const getAppControllerGetHelloV1QueryOptions = <TData = Awaited<ReturnType<typeof appControllerGetHelloV1>>, TError = AxiosError<unknown>>( options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof appControllerGetHelloV1>>, TError, TData>, axios?: AxiosRequestConfig}
+export const getAppControllerGetHelloV1QueryOptions = <TData = Awaited<ReturnType<typeof appControllerGetHelloV1>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof appControllerGetHelloV1>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
 ) => {
 
-const {query: queryOptions, axios: axiosOptions} = options ?? {};
+const {query: queryOptions, request: requestOptions} = options ?? {};
 
   const queryKey =  queryOptions?.queryKey ?? getAppControllerGetHelloV1QueryKey();
 
   
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof appControllerGetHelloV1>>> = ({ signal }) => appControllerGetHelloV1({ signal, ...axiosOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof appControllerGetHelloV1>>> = ({ signal }) => appControllerGetHelloV1(requestOptions, signal);
 
       
 
       
 
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof appControllerGetHelloV1>>, TError, TData> & { queryKey: QueryKey }
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof appControllerGetHelloV1>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
 export type AppControllerGetHelloV1QueryResult = NonNullable<Awaited<ReturnType<typeof appControllerGetHelloV1>>>
-export type AppControllerGetHelloV1QueryError = AxiosError<unknown>
+export type AppControllerGetHelloV1QueryError = unknown
 
 
+export function useAppControllerGetHelloV1<TData = Awaited<ReturnType<typeof appControllerGetHelloV1>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof appControllerGetHelloV1>>, TError, TData>> & Pick<
+        DefinedInitialDataOptions<
+          Awaited<ReturnType<typeof appControllerGetHelloV1>>,
+          TError,
+          Awaited<ReturnType<typeof appControllerGetHelloV1>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useAppControllerGetHelloV1<TData = Awaited<ReturnType<typeof appControllerGetHelloV1>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof appControllerGetHelloV1>>, TError, TData>> & Pick<
+        UndefinedInitialDataOptions<
+          Awaited<ReturnType<typeof appControllerGetHelloV1>>,
+          TError,
+          Awaited<ReturnType<typeof appControllerGetHelloV1>>
+        > , 'initialData'
+      >, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
+export function useAppControllerGetHelloV1<TData = Awaited<ReturnType<typeof appControllerGetHelloV1>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof appControllerGetHelloV1>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient
+  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useAppControllerGetHelloV1<TData = Awaited<ReturnType<typeof appControllerGetHelloV1>>, TError = AxiosError<unknown>>(
-  options?: { query?:UseQueryOptions<Awaited<ReturnType<typeof appControllerGetHelloV1>>, TError, TData>, axios?: AxiosRequestConfig}
-  
- ):  UseQueryResult<TData, TError> & { queryKey: QueryKey } {
+export function useAppControllerGetHelloV1<TData = Awaited<ReturnType<typeof appControllerGetHelloV1>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof appControllerGetHelloV1>>, TError, TData>>, request?: SecondParameter<typeof customInstance>}
+ , queryClient?: QueryClient 
+ ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
   const queryOptions = getAppControllerGetHelloV1QueryOptions(options)
 
-  const query = useQuery(queryOptions) as  UseQueryResult<TData, TError> & { queryKey: QueryKey };
+  const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 
   query.queryKey = queryOptions.queryKey ;
 
