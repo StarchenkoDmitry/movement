@@ -122,13 +122,13 @@ export function useUserControllerMeV1<TData = Awaited<ReturnType<typeof userCont
 
 
 
-export const userControllerUpdateV1 = (
+export const userControllerUpdateNameV1 = (
     updateUserDto: UpdateUserDto,
  options?: SecondParameter<typeof customInstance>,signal?: AbortSignal
 ) => {
       
       
-      return customInstance<void>(
+      return customInstance<User>(
       {url: `/api/v1/user/me`, method: 'POST',
       headers: {'Content-Type': 'application/json', },
       data: updateUserDto, signal
@@ -138,11 +138,11 @@ export const userControllerUpdateV1 = (
   
 
 
-export const getUserControllerUpdateV1MutationOptions = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof userControllerUpdateV1>>, TError,{data: UpdateUserDto}, TContext>, request?: SecondParameter<typeof customInstance>}
-): UseMutationOptions<Awaited<ReturnType<typeof userControllerUpdateV1>>, TError,{data: UpdateUserDto}, TContext> => {
+export const getUserControllerUpdateNameV1MutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof userControllerUpdateNameV1>>, TError,{data: UpdateUserDto}, TContext>, request?: SecondParameter<typeof customInstance>}
+): UseMutationOptions<Awaited<ReturnType<typeof userControllerUpdateNameV1>>, TError,{data: UpdateUserDto}, TContext> => {
 
-const mutationKey = ['userControllerUpdateV1'];
+const mutationKey = ['userControllerUpdateNameV1'];
 const {mutation: mutationOptions, request: requestOptions} = options ?
       options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
       options
@@ -152,10 +152,10 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
       
 
 
-      const mutationFn: MutationFunction<Awaited<ReturnType<typeof userControllerUpdateV1>>, {data: UpdateUserDto}> = (props) => {
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof userControllerUpdateNameV1>>, {data: UpdateUserDto}> = (props) => {
           const {data} = props ?? {};
 
-          return  userControllerUpdateV1(data,requestOptions)
+          return  userControllerUpdateNameV1(data,requestOptions)
         }
 
         
@@ -163,20 +163,20 @@ const {mutation: mutationOptions, request: requestOptions} = options ?
 
   return  { mutationFn, ...mutationOptions }}
 
-    export type UserControllerUpdateV1MutationResult = NonNullable<Awaited<ReturnType<typeof userControllerUpdateV1>>>
-    export type UserControllerUpdateV1MutationBody = UpdateUserDto
-    export type UserControllerUpdateV1MutationError = unknown
+    export type UserControllerUpdateNameV1MutationResult = NonNullable<Awaited<ReturnType<typeof userControllerUpdateNameV1>>>
+    export type UserControllerUpdateNameV1MutationBody = UpdateUserDto
+    export type UserControllerUpdateNameV1MutationError = unknown
 
-    export const useUserControllerUpdateV1 = <TError = unknown,
-    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof userControllerUpdateV1>>, TError,{data: UpdateUserDto}, TContext>, request?: SecondParameter<typeof customInstance>}
+    export const useUserControllerUpdateNameV1 = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof userControllerUpdateNameV1>>, TError,{data: UpdateUserDto}, TContext>, request?: SecondParameter<typeof customInstance>}
  , queryClient?: QueryClient): UseMutationResult<
-        Awaited<ReturnType<typeof userControllerUpdateV1>>,
+        Awaited<ReturnType<typeof userControllerUpdateNameV1>>,
         TError,
         {data: UpdateUserDto},
         TContext
       > => {
 
-      const mutationOptions = getUserControllerUpdateV1MutationOptions(options);
+      const mutationOptions = getUserControllerUpdateNameV1MutationOptions(options);
 
       return useMutation(mutationOptions, queryClient);
     }
