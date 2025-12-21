@@ -38,9 +38,6 @@ async function bootstrap() {
     .setTitle('movement')
     .setDescription('The cats API description')
     .setVersion('1.0')
-    .addTag('cats')
-    .addTag('users')
-    .addTag('auth')
     .addCookieAuth(SESSION_COOKIE_NAME)
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
