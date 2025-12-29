@@ -2,7 +2,7 @@
   "name": "movement",
   "version": "1.0.0",
   "author": "StarchenkoDmitry (starchenkodmitrypavlovich@gmail.com)",
-  "license": "MIT",
+  "license": "MIT2",
   "type": "module",
   "scripts": {
     "d:up": "docker compose up -d",
